@@ -22,7 +22,7 @@ public class Endpoint<RequestPayload, ResponsePayload> {
     let encode: (RequestPayload) throws -> Data
     let decode: (Data) throws -> ResponsePayload
     
-    init(method: Method = .get,
+    public init(method: Method = .get,
          path: Path,
          parameters: QueryParameters? = nil,
          body: RequestPayload? = nil,
@@ -56,7 +56,7 @@ public class Endpoint<RequestPayload, ResponsePayload> {
     
 }
 
-extension Endpoint where RequestPayload == Void, ResponsePayload == Void {
+public extension Endpoint where RequestPayload == Void, ResponsePayload == Void {
     convenience init(method: Method = .get,
                      path: Path,
                      parameters: QueryParameters? = nil,
@@ -72,7 +72,7 @@ extension Endpoint where RequestPayload == Void, ResponsePayload == Void {
     }
 }
 
-extension Endpoint where RequestPayload: Swift.Encodable, ResponsePayload: Swift.Decodable {
+public extension Endpoint where RequestPayload: Swift.Encodable, ResponsePayload: Swift.Decodable {
     convenience init(method: Method = .get,
                      path: Path,
                      parameters: QueryParameters? = nil,
@@ -90,7 +90,7 @@ extension Endpoint where RequestPayload: Swift.Encodable, ResponsePayload: Swift
     }
 }
 
-extension Endpoint where RequestPayload == Void, ResponsePayload: Swift.Decodable {
+public extension Endpoint where RequestPayload == Void, ResponsePayload: Swift.Decodable {
     convenience init(method: Method = .get,
                      path: Path,
                      parameters: QueryParameters? = nil,
@@ -106,7 +106,7 @@ extension Endpoint where RequestPayload == Void, ResponsePayload: Swift.Decodabl
     }
 }
 
-extension Endpoint where RequestPayload: Swift.Encodable, ResponsePayload == Void {
+public extension Endpoint where RequestPayload: Swift.Encodable, ResponsePayload == Void {
     convenience init(method: Method = .get,
                      path: Path,
                      parameters: QueryParameters? = nil,
