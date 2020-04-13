@@ -149,10 +149,6 @@ client.fetch(API.get(id: 1)) { (result) in
 
 ```
 
-## History
-
-- 0.9.0: Initial Release
-
 ## Contribution
 
 Please, feel free to give feedback by opening an issue, or even better by forking and submitting a PR ! ;)
