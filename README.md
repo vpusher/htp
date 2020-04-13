@@ -14,7 +14,23 @@ A tiny and simple HTTP client for RESTful APIs, written in Swift.
 
 ## Setup
 
-Using Swift Package Manager (or directly in XCode), add the package `vpusher/htp` as a new dependency and you are done !
+Add the Swift package `https://github.com/vpusher/htp` as a new dependency:
+
+- From another package, edit your `Package.swift` file,
+
+```swift
+dependencies: [
+    ...
+    .package(
+        url: "https://github.com/vpusher/htp",
+        from: "0.9.2"
+    )
+]
+```
+
+- From an XCode project, select **File** > **Swift Packages** > **Add Package Dependency** and enter its repository URL.
+
+That's it.
 
 ### Define a model/entity
 
