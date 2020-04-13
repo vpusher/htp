@@ -21,8 +21,9 @@ public final class Client: ClientProtocol {
     
     // To be used for frequent external updates like access token renewal or so. Overrides baseHeaders for same keys.
     public var additionalHeaders: HeaderParameters = [:]
+    public var debug: Bool = false
         
-    init(baseURL: URL = URL(string: "http://localhost")!,
+    public init(baseURL: URL = URL(string: "http://localhost")!,
          baseHeaders: HeaderParameters = [:],
          session: URLSession = URLSession.shared) {
         self.baseURL = baseURL
@@ -31,7 +32,7 @@ public final class Client: ClientProtocol {
     }
         
     @discardableResult
-    func fetch<RequestPayload, ResponsePayload>(_ endpoint: Endpoint<RequestPayload, ResponsePayload>, completion: @escaping ClientResult<ResponsePayload>) -> URLRequest? {
+    public func fetch<RequestPayload, ResponsePayload>(_ endpoint: Endpoint<RequestPayload, ResponsePayload>, completion: @escaping ClientResult<ResponsePayload>) -> URLRequest? {
         
         guard let url = endpoint.url(base: baseURL) else {
             completion(.failure(.invalidEndpoint))
@@ -53,7 +54,7 @@ public final class Client: ClientProtocol {
         headers.merge(additionalHeaders) { (_, additionalValue) in additionalValue } // Priority 1: additional headers.
         headers.merge(endpoint.headers ?? [:]) { (_, endpointValue) in endpointValue } // Priority 0: endpoint headers.
         
-        let task = session.dataTask(with: url, method: endpoint.method, headers: headers, body: body) { result  in
+        let task = session.dataTask(with: url, method: endpoint.method, headers: headers, body: body, debug: debug) { result  in
             switch result {
                 
             // SUCCESS
@@ -95,7 +96,9 @@ public final class Client: ClientProtocol {
                     let value = try endpoint.decode(data)
                     completion(.success((value, response)))
                 } catch (let error) {
-                    print(error)
+                    if self.debug {
+                        print(error)
+                    }
                     completion(.failure(.decodeError(response)))
                 }
                 

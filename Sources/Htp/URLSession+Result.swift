@@ -6,7 +6,7 @@ import Foundation
 
 extension URLSession {
     
-    func dataTask(with url: URL, method: Method = .get, headers: HeaderParameters? = nil, body: Data? = nil, result: @escaping (Result<(URLResponse, Data), Error>) -> Void) -> URLSessionDataTask {
+    func dataTask(with url: URL, method: Method = .get, headers: HeaderParameters? = nil, body: Data? = nil, debug: Bool = false, result: @escaping (Result<(URLResponse, Data), Error>) -> Void) -> URLSessionDataTask {
         
         // URL.
         var request = URLRequest(url: url)
@@ -22,12 +22,16 @@ extension URLSession {
         // Request Payload/Body
         request.httpBody = body
         
-        print("REQUEST - [\(request.hashValue)]\n\(request.cURL)")
+        if debug {
+            print("REQUEST - [\(request.hashValue)]\n\(request.cURL)")
+        }
         
         return dataTask(with: request) { (data, response, error) in
             
             if let error = error {
-                print("RESPONSE - [\(request.hashValue)]\n\(error)")
+                if debug {
+                    print("RESPONSE - [\(request.hashValue)]\n\(error)")
+                }
                 result(.failure(error))
                 return
             }
@@ -38,10 +42,12 @@ extension URLSession {
                 return
             }
             
-            if let playload = String(data: data, encoding: .utf8) {
-                print("\(response)\n\(playload)")
-            } else {
-                print(response)
+            if debug {
+                if let playload = String(data: data, encoding: .utf8) {
+                    print("\(response)\n\(playload)")
+                } else {
+                    print(response)
+                }
             }
             
             result(.success((response, data)))
