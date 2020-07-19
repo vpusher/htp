@@ -6,7 +6,7 @@ import Foundation
 
 extension URLSession {
     
-    func dataTask(with url: URL, method: Method = .get, headers: HeaderParameters? = nil, body: Data? = nil, debug: Bool = false, result: @escaping (Result<(URLResponse, Data), Error>) -> Void) -> URLSessionDataTask {
+    func dataTask(with url: URL, method: Method = .get, headers: HeaderParameters? = nil, body: Data? = nil, debug: Bool = false, result: @escaping (Result<(URLResponse, Data), DataTaskError>) -> Void) -> URLSessionDataTask {
         
         // URL.
         var request = URLRequest(url: url)
@@ -32,13 +32,16 @@ extension URLSession {
                 if debug {
                     print("RESPONSE - [\(request.hashValue)]\n\(error)")
                 }
-                result(.failure(error))
+                DispatchQueue.main.async {
+                    result(.failure(.wrappedError(error, response)))
+                }
                 return
             }
             
             guard let response = response, let data = data else {
-                let error = NSError(domain: "error", code: 0, userInfo: nil)
-                result(.failure(error))
+                DispatchQueue.main.async {
+                    result(.failure(.noResponse))
+                }
                 return
             }
             
@@ -50,8 +53,17 @@ extension URLSession {
                 }
             }
             
-            result(.success((response, data)))
+            DispatchQueue.main.async {
+                result(.success((response, data)))
+            }
         }
     }
+}
+
+public enum DataTaskError: Error {
+    
+    case noResponse
+    case wrappedError(Error, URLResponse?)
+    
 }
 

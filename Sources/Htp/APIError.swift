@@ -14,7 +14,11 @@ public enum APIError: Error {
     
     case invalidEndpoint
     
-    case invalidResponse
+    case invalidResponse(URLResponse?)
+    
+    case unsupported(Error)
+    
+    case noResponse
     
     case noData(HTTPURLResponse?)
     

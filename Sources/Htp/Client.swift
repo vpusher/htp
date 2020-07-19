@@ -58,10 +58,10 @@ public final class Client: ClientProtocol {
             switch result {
                 
             // SUCCESS
-            case .success(let (response, data)):
+            case .success(let (resp, data)):
                 
-                guard let response = response as? HTTPURLResponse else {
-                    completion(.failure(.invalidResponse))
+                guard let response = resp as? HTTPURLResponse else {
+                    completion(.failure(.invalidResponse(resp)))
                     return
                 }
                 
@@ -103,8 +103,13 @@ public final class Client: ClientProtocol {
                 }
                 
             // FAILURE
-            case .failure(_):
-                completion(.failure(.invalidResponse))
+            case .failure(let error):
+                switch error {
+                case .noResponse:
+                    completion(.failure(.noResponse))
+                case .wrappedError(let error, _):
+                    completion(.failure(.unsupported(error)))
+                }
             }
         }
         
