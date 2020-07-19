@@ -3,6 +3,7 @@
 //
 
 import Foundation
+import Swifter
 @testable import Htp
 
 struct MockAPI {}
@@ -12,14 +13,14 @@ extension MockAPI {
     static let testHeaderKey = "X-Test"
     static let testHeaderValue = "endpoint"
     
-    static func get() -> Endpoint<Void, Void> {
+    static func getVoidVoid() -> Endpoint<Void, Void> {
         return Endpoint(
             method: .get,
             path: "/"
         )
     }
     
-    static func customGet() -> Endpoint<Void, Void> {
+    static func getVoidVoidWithHeader() -> Endpoint<Void, Void> {
         return Endpoint(
             method: .get,
             path: "/",
@@ -27,27 +28,61 @@ extension MockAPI {
         )
     }
     
-    static func postPing() -> Endpoint<Ping, Void> {
+    static func postPingVoid() -> Endpoint<Ping, Void> {
         return Endpoint(
             method: .post,
-            path: "/",
+            path: "/ping",
             body: Ping()
         )
     }
     
-    static func getPong() -> Endpoint<Void, Pong> {
+    static func getVoidPong() -> Endpoint<Void, Pong> {
         return Endpoint(
             method: .get,
-            path: "/"
+            path: "/ping"
         )
     }
     
     static func postPingPong() -> Endpoint<Ping, Pong> {
         return Endpoint(
             method: .post,
-            path: "/",
+            path: "/ping",
             body: Ping()
         )
+    }
+    
+    static func getError() -> Endpoint<Void, Void> {
+        return Endpoint(
+            method: .get,
+            path: "/error"
+        )
+    }
+    
+    static func getRedirection() -> Endpoint<Void, Void> {
+        return Endpoint(
+            method: .get,
+            path: "/redirection"
+        )
+    }
+    
+    // Not implemented server side on purpore (= client error).
+    static func getUnknown() -> Endpoint<Void, Void> {
+        return Endpoint(
+            method: .get,
+            path: "/unknown"
+        )
+    }
+}
+
+extension MockAPI {
+    static public func buildServer() -> HttpServer {
+        let server = HttpServer()
+        server.GET["/"] = { request in .ok(.json([:]))  }
+        server.GET["/ping"] = { request in .ok(.json(["message": "pong"])) }
+        server.POST["/ping"] = { request in .ok(.json(["message": "pong"])) }
+        server.GET["/error"] = { request in .internalServerError }
+        server.GET["/redirection"] = { request in .movedTemporarily("/ping") }
+        return server
     }
 }
 

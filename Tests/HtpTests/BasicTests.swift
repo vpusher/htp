@@ -34,7 +34,7 @@ final class BasicTests: XCTestCase {
         let client = Client(baseHeaders: [MockAPI.testHeaderKey: "base"])
         client.additionalHeaders[MockAPI.testHeaderKey] = "add"
         
-        let request = client.fetch(MockAPI.customGet()) { _ in }
+        let request = client.fetch(MockAPI.getVoidVoidWithHeader()) { _ in }
         
         XCTAssertEqual(request?.allHTTPHeaderFields?[MockAPI.testHeaderKey], MockAPI.testHeaderValue)
     }
@@ -44,7 +44,7 @@ final class BasicTests: XCTestCase {
         let client = Client(baseHeaders: [MockAPI.testHeaderKey: "base"])
         client.additionalHeaders[MockAPI.testHeaderKey] = "add"
         
-        let request = client.fetch(MockAPI.get()) { _ in }
+        let request = client.fetch(MockAPI.getVoidVoid()) { _ in }
         
         XCTAssertEqual(request?.allHTTPHeaderFields?[MockAPI.testHeaderKey], "add")
     }
@@ -53,7 +53,7 @@ final class BasicTests: XCTestCase {
         
         let client = Client(baseHeaders: [MockAPI.testHeaderKey: "base"])
                 
-        let request = client.fetch(MockAPI.get()) { _ in }
+        let request = client.fetch(MockAPI.getVoidVoid()) { _ in }
         
         XCTAssertEqual(request?.allHTTPHeaderFields?[MockAPI.testHeaderKey], "base")
     }

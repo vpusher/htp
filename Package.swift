@@ -9,13 +9,15 @@ let package = Package(
             name: "Htp",
             targets: ["Htp"]),
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/httpswift/swifter.git", .upToNextMajor(from: "1.4.7"))
+    ],
     targets: [
         .target(
             name: "Htp",
             dependencies: []),
         .testTarget(
             name: "HtpTests",
-            dependencies: ["Htp"]),
+            dependencies: ["Htp", "Swifter"]),
     ]
 )
