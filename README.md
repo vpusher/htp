@@ -23,7 +23,7 @@ dependencies: [
     ...
     .package(
         url: "https://github.com/vpusher/htp",
-        from: "0.9.2"
+        from: "0.9.3"
     )
 ]
 ```
